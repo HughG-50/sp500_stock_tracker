@@ -8,9 +8,8 @@ require 'terminal-table'
 require './sp500_hash_table.rb'
 require './iex_API_Key.rb'
 
-# Normal key
-# This line is initialising the API class? - allows us to use the IEX API
-# Need to be able to explain what is happening here better
+# API_KEY is hidden - sign up to iexcloud.io with account to get one
+# Initialising the Stock class from 'stock_quote' - allows us to use the IEX API
 StockQuote::Stock.new(api_key: API_KEY)
 
 make_stock_price_check = true
@@ -26,6 +25,11 @@ end
 def get_stock(stock_ticker)
     stock = StockQuote::Stock.quote(stock_ticker)
     return stock
+end
+
+# essentially the same as the ticker that the user inputs
+def get_stock_symbol(stock)
+    return stock.symbol.upcase
 end
 
 def get_stock_price(stock)
@@ -57,7 +61,7 @@ def get_52w_low(stock)
     return stock.week52_low
 end
 
-# Helper functions to convert data points 
+# Helper functions to calculate price and percentage changes for additional data points
 
 # Converts %ytd_change into price figure
 def get_price_change_ytd(stock)
@@ -73,29 +77,51 @@ end
 # Get price change from 52 week high to current price
 def get_price_change_52w_h(stock)
     stock_price = get_stock_price(stock)
-    52_week_high = get_52w_high(stock)
-    return stock_price - 52_week_high
+    week_52_high = get_52w_high(stock)
+    return stock_price - week_52_high
 end
 
 # Get price change from 52 week low to current price
 def get_price_change_52w_l(stock)
     stock_price = get_stock_price(stock)
-    52_week_low = get_52w_low(stock)
-    return stock_price - 52_week_low
+    week_52_low = get_52w_low(stock)
+    return stock_price - week_52_low
 end
 
 # Get percentage price change from 52 week high to current price
 def get_pct_change_52w_h(stock)
     price_change_from_52w_h = get_price_change_52w_h(stock)
-    52_week_high = get_52w_high(stock)
-    return price_change_from_52w_h/52_week_high
+    week_52_high = get_52w_high(stock)
+    return price_change_from_52w_h/week_52_high
 end
 
 # Get percentage price change from 52 week low to current price
 def get_pct_change_52w_l(stock)
     price_change_from_52w_l = get_price_change_52w_l(stock)
-    52_week_low = get_52w_low(stock)
-    return price_change_from_52w_l/52_week_low
+    week_52_low = get_52w_low(stock)
+    return price_change_from_52w_l/week_52_low
+end
+
+# Displays price and % price change since yesterday in table format
+def print_single_stock_price(stock)
+    
+    rows = []
+    # Check if price is up from yesterday, if so colour the price and % change green
+    # Price values are converted into strings for purposes of printing in order to colorize output
+    if get_price_change_y_day(stock) > 0
+        rows.push([get_stock_symbol(stock), "$".colorize(:green) + get_stock_price(stock).to_s.colorize(:green), 
+                get_pct_change_y_day(stock).to_s.colorize(:green) + "%".colorize(:green)])
+    # Check if price is down from yesterday, if so colour the price and % change red
+    elsif get_price_change_y_day(stock) < 0
+        rows.push([get_stock_symbol(stock), "$".colorize(:red) + get_stock_price(stock).to_s.colorize(:red), 
+            get_pct_change_y_day(stock).to_s.colorize(:red) + "%".colorize(:red)])
+    else
+        rows.push([get_stock_symbol(stock), "$" + get_stock_price(stock).to_s, "0%"])
+    end
+
+    table = Terminal::Table.new :rows => rows
+    table = Terminal::Table.new :headings => ['Stock', 'Price', '% Change from previous day'], :rows => rows
+    puts table
 end
 
 puts "Welcome to the S&P 500 Stock Tracker"
@@ -105,11 +131,7 @@ while make_stock_price_check == true
     puts "Enter a stock ticker from the S&P500:"
     stock_ticker = gets.chomp.upcase
     stock = get_stock(stock_ticker)
-    # stock = StockQuote::Stock.quote(stock_ticker)
-    stock_name = get_company_name(stock_ticker)
-    stock_sector = get_stock_sector(stock_ticker)
-    stock_price = get_stock_price(stock)
-    puts "#{stock_ticker} - #{stock_name} current price: #{stock_price}"
+    print_single_stock_price(stock)
 
     puts "Would you like to check another stock? (y/n):"
     another_stock_check = gets.chomp
