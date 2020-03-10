@@ -98,21 +98,6 @@ def get_pct_change_52w_l(stock)
     return price_change_from_52w_l/52_week_low
 end
 
-
-# def get_pct_change_ytd(stock)
-#     stock_price = stock.latest_price
-#     ytd_price_change = stock.ytd_change
-#     # Calculate the price at the start of the year
-#     year_start_price = stock_price - ytd_price_change
-#     # return the percentage change from year to date
-#     return ytd_price_change/year_start_price
-# end
-
-# Get % change from 52 week low
-def get_pct_change_52w_l(stock)
-
-end
-
 puts "Welcome to the S&P 500 Stock Tracker"
 puts "You can check the prices of stocks that are in the S&P 500 by entering a stock ticker"
 
