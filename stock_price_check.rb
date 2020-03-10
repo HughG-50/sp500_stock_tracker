@@ -57,7 +57,14 @@ def get_52_week_low(stock)
 end
 
 # Helper functions to convert data points into percentages
-def get_pct_change_ytd(stock, ytd_price_change)
+def get_pct_change_ytd(stock)
+    stock_price = get_stock_price(stock)
+    ytd_price_change = get_price_change_ytd(stock)
+    # Calculate the price at the start of the year
+    year_start_price = stock_price - ytd_price_change
+    # return the percentage change from year to date
+    return ytd_price_change/year_start_price
+end
 
 puts "Welcome to the S&P 500 Stock Tracker"
 puts "You can check the prices of stocks that are in the S&P 500 by entering a stock ticker"
