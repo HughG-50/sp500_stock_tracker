@@ -27,7 +27,10 @@ def get_stock(stock_ticker)
     return stock
 end
 
-# essentially the same as the ticker that the user inputs
+# Essentially the same as the ticker that the user inputs
+# However we use this method as the user input is error checked first
+# *******************
+# NEEDS TESTS OF HASH_TABLE TO MAKE SURE THIS IS VALID
 def get_stock_symbol(stock)
     return stock.symbol.upcase
 end
@@ -92,36 +95,63 @@ end
 def get_pct_change_52w_h(stock)
     price_change_from_52w_h = get_price_change_52w_h(stock)
     week_52_high = get_52w_high(stock)
-    return price_change_from_52w_h/week_52_high
+    return (price_change_from_52w_h/week_52_high).round(5)
 end
 
 # Get percentage price change from 52 week low to current price
 def get_pct_change_52w_l(stock)
     price_change_from_52w_l = get_price_change_52w_l(stock)
     week_52_low = get_52w_low(stock)
-    return price_change_from_52w_l/week_52_low
+    return (price_change_from_52w_l/week_52_low).round(5)
 end
 
-# Displays price and % price change since yesterday in table format
-def print_single_stock_price(stock)
-    
+# Displays stock ticker, company name, sector, 
+def print_single_stock_info(stock)
+    # *************
+    # NEED TO TEST IF THIS IS VALID OR WHETHER STOCK_TICKER SHOULD BE PASSED IN AS AN ARGUMENT TO METHOD AS WELL
+    stock_ticker = get_stock_symbol(stock)
+    rows = []
+    rows.push([stock_ticker, get_company_name(stock_ticker), get_stock_sector(stock_ticker), get_stock_price(stock),
+            get_pe_ratio(stock)])
+    table = Terminal::Table.new :rows => rows
+    table = Terminal::Table.new :headings => ['Ticker','Company','Sector', 'Price', 'PE Ratio'], :rows => rows
+    puts table
+end
+
+
+# Displays stock price + price changes from key points in % terms 
+# Price, % change from yesterday, % change from 52w_high, % change from 52w_low 
+def print_single_stock_price_pct(stock)
     rows = []
     # Check if price is up from yesterday, if so colour the price and % change green
     # Price values are converted into strings for purposes of printing in order to colorize output
     if get_price_change_y_day(stock) > 0
         rows.push([get_stock_symbol(stock), "$".colorize(:green) + get_stock_price(stock).to_s.colorize(:green), 
-                get_pct_change_y_day(stock).to_s.colorize(:green) + "%".colorize(:green)])
+                (get_pct_change_y_day(stock)*100).round(2).to_s.colorize(:green) + "%".colorize(:green), 
+                (get_pct_change_52w_h(stock)*100).round(2).to_s.colorize(:red)+ "%".colorize(:red), 
+                (get_pct_change_52w_l(stock)*100).round(2).to_s.colorize(:green) + "%".colorize(:green)])
     # Check if price is down from yesterday, if so colour the price and % change red
     elsif get_price_change_y_day(stock) < 0
         rows.push([get_stock_symbol(stock), "$".colorize(:red) + get_stock_price(stock).to_s.colorize(:red), 
-            get_pct_change_y_day(stock).to_s.colorize(:red) + "%".colorize(:red)])
+                (get_pct_change_y_day(stock)*100).round(2).to_s.colorize(:red) + "%".colorize(:red),
+                (get_pct_change_52w_h(stock)*100).round(2).to_s.colorize(:red) + "%".colorize(:red), 
+                (get_pct_change_52w_l(stock)*100).round(2).to_s.colorize(:green) + "%".colorize(:green)])
     else
-        rows.push([get_stock_symbol(stock), "$" + get_stock_price(stock).to_s, "0%"])
+        rows.push([get_stock_symbol(stock), "$" + get_stock_price(stock).to_s, "0%", 
+                (get_pct_change_52w_h(stock)*100).round(2).to_s.colorize(:red)+ "%".colorize(:red), 
+                (get_pct_change_52w_l(stock)*100).round(2).to_s.colorize(:green)+ "%".colorize(:red)])
     end
 
     table = Terminal::Table.new :rows => rows
-    table = Terminal::Table.new :headings => ['Stock', 'Price', '% Change from previous day'], :rows => rows
+    table = Terminal::Table.new :headings => ['Stock', 'Price','% From Prev Day','% From 52 Week High','% From 52 Week Low'], :rows => rows
     puts table
+end
+
+# Displays extended information compared to print_single_stock_price
+# Price, % change from yesterday, % change ytd, % change from 52w_high, % change from 52w_low 
+def print_single_stock_price(stock)
+
+
 end
 
 puts "Welcome to the S&P 500 Stock Tracker"
@@ -131,7 +161,8 @@ while make_stock_price_check == true
     puts "Enter a stock ticker from the S&P500:"
     stock_ticker = gets.chomp.upcase
     stock = get_stock(stock_ticker)
-    print_single_stock_price(stock)
+    # print_single_stock_info(stock)
+    print_single_stock_price_pct(stock)
 
     puts "Would you like to check another stock? (y/n):"
     another_stock_check = gets.chomp
