@@ -40,7 +40,8 @@ def get_pct_change_y_day(stock)
     return stock.change_percent
 end
 
-def get_price_change_ytd(stock)
+# Returns a percentage
+def get_pct_change_ytd(stock)
     return stock.ytd_change
 end
 
@@ -48,22 +49,68 @@ def get_pe_ratio(stock)
     return stock.pe_ratio
 end
 
-def get_52_week_high(stock)
+def get_52w_high(stock)
     return stock.week52_high
 end
 
-def get_52_week_low(stock)
+def get_52w_low(stock)
     return stock.week52_low
 end
 
-# Helper functions to convert data points into percentages
-def get_pct_change_ytd(stock)
+# Helper functions to convert data points 
+
+# Converts %ytd_change into price figure
+def get_price_change_ytd(stock)
     stock_price = get_stock_price(stock)
-    ytd_price_change = get_price_change_ytd(stock)
+    ytd_pct_change = get_pct_change_ytd(stock)
     # Calculate the price at the start of the year
-    year_start_price = stock_price - ytd_price_change
-    # return the percentage change from year to date
-    return ytd_price_change/year_start_price
+    year_start_price = stock_price - (ytd_pct_change*stock_price)
+    # get the price change from the start of year to date
+    ytd_price_change = stock_price - year_start_price
+    return ytd_price_change.round(2)
+end
+
+# Get price change from 52 week high to current price
+def get_price_change_52w_h(stock)
+    stock_price = get_stock_price(stock)
+    52_week_high = get_52w_high(stock)
+    return stock_price - 52_week_high
+end
+
+# Get price change from 52 week low to current price
+def get_price_change_52w_l(stock)
+    stock_price = get_stock_price(stock)
+    52_week_low = get_52w_low(stock)
+    return stock_price - 52_week_low
+end
+
+# Get percentage price change from 52 week high to current price
+def get_pct_change_52w_h(stock)
+    price_change_from_52w_h = get_price_change_52w_h(stock)
+    52_week_high = get_52w_high(stock)
+    return price_change_from_52w_h/52_week_high
+end
+
+# Get percentage price change from 52 week low to current price
+def get_pct_change_52w_l(stock)
+    price_change_from_52w_l = get_price_change_52w_l(stock)
+    52_week_low = get_52w_low(stock)
+    return price_change_from_52w_l/52_week_low
+end
+
+
+# def get_pct_change_ytd(stock)
+#     stock_price = stock.latest_price
+#     ytd_price_change = stock.ytd_change
+#     # Calculate the price at the start of the year
+#     year_start_price = stock_price - ytd_price_change
+#     # return the percentage change from year to date
+#     return ytd_price_change/year_start_price
+# end
+
+# Get % change from 52 week low
+def get_pct_change_52w_l(stock)
+
 end
 
 puts "Welcome to the S&P 500 Stock Tracker"
