@@ -44,6 +44,21 @@ def get_price_change_ytd(stock)
     return stock.ytd_change
 end
 
+def get_pe_ratio(stock)
+    return stock.pe_ratio
+end
+
+def get_52_week_high(stock)
+    return stock.week52_high
+end
+
+def get_52_week_low(stock)
+    return stock.week52_low
+end
+
+# Helper functions to convert data points into percentages
+def get_pct_change_ytd(stock, ytd_price_change)
+
 puts "Welcome to the S&P 500 Stock Tracker"
 puts "You can check the prices of stocks that are in the S&P 500 by entering a stock ticker"
 
