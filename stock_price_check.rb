@@ -13,7 +13,7 @@ require './iex_API_Key.rb'
 # Need to be able to explain what is happening here better
 StockQuote::Stock.new(api_key: API_KEY)
 
-make_stock_price_check = false
+make_stock_price_check = true
 
 def get_company_name(stock_ticker)
     return SP500_HASH_TABLE[stock_ticker][0]
