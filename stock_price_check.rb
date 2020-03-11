@@ -29,7 +29,6 @@ puts "Welcome to the S&P 500 Stock Tracker"
 
 while make_stock_price_check == true
     user_choice = prompt.select("Please choose which function you'd like to use:", user_options)
-    # puts user_choice
 
     if user_choice == "Get stock information"
         puts "Enter a stock ticker from the S&P500:"
@@ -52,9 +51,10 @@ while make_stock_price_check == true
     end
 
     # replace these two lines with a TTY-Prompt
-    puts "Keep using S&P 500 Stock Tracker? (y/n):"
-    keep_using = gets.chomp
-    if keep_using != "y"
+    keep_using = prompt.yes?('Keep using S&P 500 Stock Tracker?')
+    # puts keep_using
+
+    if keep_using == false
         make_stock_price_check = false
     end
 
