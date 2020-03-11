@@ -13,17 +13,9 @@ include Test::Unit::Assertions
 
 require_relative 'sp500_hash_table.rb'
 require_relative 'iex_API_Key.rb'
+require_relative 'stock_getter_methods.rb'
 
 StockQuote::Stock.new(api_key: API_KEY)
-
-def get_stock(stock_ticker)
-    stock = StockQuote::Stock.quote(stock_ticker)
-    return stock
-end
-
-def get_stock_symbol(stock)
-    return stock.symbol.upcase
-end
 
 list_of_keys = SP500_HASH_TABLE.keys()
     
