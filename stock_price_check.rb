@@ -5,8 +5,10 @@
 require 'stock_quote'
 require 'colorize'
 require 'terminal-table'
-require './sp500_hash_table.rb'
-require './iex_API_Key.rb'
+require_relative './sp500_hash_table.rb'
+require_relative './iex_API_Key.rb'
+
+require 
 
 # API_KEY is hidden - sign up to iexcloud.io with account to get one
 # Initialising the Stock class from 'stock_quote' - allows us to use the IEX API
