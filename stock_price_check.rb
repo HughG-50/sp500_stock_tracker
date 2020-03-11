@@ -4,62 +4,87 @@
 
 require 'stock_quote'
 require 'colorize'
-require 'terminal-table'
-require './sp500_hash_table.rb'
-require './iex_API_Key.rb'
+require 'terminal-table' 
+require 'tty-prompt'
+# require 'cli/ui'
 
-# Normal key
-# This line is initialising the API class? - allows us to use the IEX API
-# Need to be able to explain what is happening here better
+require_relative 'sp500_hash_table.rb' 
+require_relative 'iex_API_Key.rb'
+require_relative 'stock_getter_methods.rb'
+require_relative 'stock_print_methods.rb'
+
+# API_KEY is hidden - sign up to iexcloud.io with account to get one
+# Initialising the Stock class from 'stock_quote' - allows us to use the IEX API
 StockQuote::Stock.new(api_key: API_KEY)
 
+# Initialise 'TTY-Prompt'
+prompt = TTY::Prompt.new
+
+# Initialising the flow control loop for user interaction to true
 make_stock_price_check = true
-
-def get_company_name(stock_ticker)
-    return SP500_HASH_TABLE[stock_ticker][0]
-end
-
-def get_stock_sector(stock_ticker)
-    return SP500_HASH_TABLE[stock_ticker][1]
-end
-
-def get_stock(stock_ticker)
-    stock = StockQuote::Stock.quote(stock_ticker)
-    return stock
-end
-
-def get_stock_price(stock)
-    return stock.latest_price
-end
-
-def get_price_change_y_day(stock)
-    return stock.change
-end
-
-def get_pct_change_y_day(stock)
-    return stock.change_percent
-end
-
-def get_price_change_ytd(stock)
-    return stock.ytd_change
-end
+stop_program_running = false
+user_options = ["Get stock overview", "Get extended stock price information", 
+                "Get extended stock price information in percentages", "Show list of available stock tickers", "Exit Program"]
 
 puts "Welcome to the S&P 500 Stock Tracker"
-puts "You can check the prices of stocks that are in the S&P 500 by entering a stock ticker"
 
 while make_stock_price_check == true
-    puts "Enter a stock ticker from the S&P500:"
-    stock_ticker = gets.chomp.upcase
-    stock = get_stock(stock_ticker)
-    # stock = StockQuote::Stock.quote(stock_ticker)
-    stock_name = get_company_name(stock_ticker)
-    stock_sector = get_stock_sector(stock_ticker)
-    stock_price = get_stock_price(stock)
-    puts "#{stock_ticker} - #{stock_name} current price: #{stock_price}"
+    user_choice = prompt.select("Please choose which function you'd like to use:", user_options)
 
-    puts "Would you like to check another stock? (y/n):"
-    another_stock_check = gets.chomp
-    if another_stock_check != "y"
-        make_stock_price_check = false
+    if user_choice == "Get stock overview"
+        puts "Enter a stock ticker from the S&P500:"
+        stock_ticker = gets.chomp.upcase
+
+        # Error handling
+        if SP500_HASH_TABLE.has_key?(stock_ticker) == true
+            stock = get_stock(stock_ticker)
+            print_single_stock_info(stock)
+        else
+            puts "Invalid stock ticker, please try again."
+            puts "Use - \'Show list of available stock tickers\' to see list of all possible ticker inputs"
+        end
+    elsif user_choice == "Get extended stock price information"
+        puts "Enter a stock ticker from the S&P500:"
+        stock_ticker = gets.chomp.upcase
+
+        # Error handling
+        if SP500_HASH_TABLE.has_key?(stock_ticker) == true
+            stock = get_stock(stock_ticker)
+            print_single_stock_price(stock)
+        else
+            puts "Invalid stock ticker, please try again."
+            puts "Use - \'Show list of available stock tickers\' to see list of all possible ticker inputs"
+        end
+
+    elsif user_choice == "Get extended stock price information in percentages"
+        puts "Enter a stock ticker from the S&P500:"
+        stock_ticker = gets.chomp.upcase
+
+         # Error handling
+         if SP500_HASH_TABLE.has_key?(stock_ticker) == true
+            stock = get_stock(stock_ticker)
+            print_single_stock_price_pct(stock)
+        else
+            puts "Invalid stock ticker, please try again."
+            puts "Use - \'Show list of available stock tickers\' to see list of all possible ticker inputs"
+        end
+
+    elsif user_choice == "Show list of available stock tickers"
+        puts "This is a list of all of the available tickers to check onthe S&P 500:"
+        print_list_of_stock_tickers()
+    elsif user_choice == "Exit Program"
+        stop_program_running = true
     end
+
+    # Exiting program conditions, exits straight away if user selected Exit Program previously.
+    # Otherwise it asks the user if they'd like to continue using it
+    if stop_program_running == true
+        make_stock_price_check = false
+    else
+        keep_using = prompt.yes?('Keep using S&P 500 Stock Tracker?')
+        if keep_using == false
+            make_stock_price_check = false
+        end
+    end
+
 end
