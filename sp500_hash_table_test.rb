@@ -8,25 +8,18 @@
 # index will throw an error using the 'stock_quote' gem
 
 require 'stock_quote'
-require './sp500_hash_table.rb'
-require './iex_API_Key.rb'
 require "test/unit/assertions"
 include Test::Unit::Assertions
 
+require_relative 'sp500_hash_table.rb'
+require_relative 'iex_API_Key.rb'
+require_relative 'stock_getter_methods.rb'
+
 StockQuote::Stock.new(api_key: API_KEY)
-
-def get_stock(stock_ticker)
-    stock = StockQuote::Stock.quote(stock_ticker)
-    return stock
-end
-
-def get_stock_symbol(stock)
-    return stock.symbol.upcase
-end
 
 list_of_keys = SP500_HASH_TABLE.keys()
     
-for i in 0..list_of_keys.length-1t
+for i in 0..list_of_keys.length-1
     puts "Current stock ticker is: #{list_of_keys[i]}"
     # API will throw an error message if incorrec
     stock = get_stock(list_of_keys[i])
