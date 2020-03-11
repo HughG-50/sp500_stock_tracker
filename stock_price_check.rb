@@ -22,40 +22,69 @@ prompt = TTY::Prompt.new
 
 # Initialising the flow control loop for user interaction to true
 make_stock_price_check = true
-user_options = ["Get stock information", "Get extended stock price information", 
-                "Get extended stock price information in %s", "Show list of available stock tickers"]
+stop_program_running = false
+user_options = ["Get stock overview", "Get extended stock price information", 
+                "Get extended stock price information in percentages", "Show list of available stock tickers", "Exit Program"]
 
 puts "Welcome to the S&P 500 Stock Tracker"
 
 while make_stock_price_check == true
     user_choice = prompt.select("Please choose which function you'd like to use:", user_options)
 
-    if user_choice == "Get stock information"
+    if user_choice == "Get stock overview"
         puts "Enter a stock ticker from the S&P500:"
         stock_ticker = gets.chomp.upcase
-        stock = get_stock(stock_ticker)
-        print_single_stock_info(stock)
+
+        # Error handling
+        if SP500_HASH_TABLE.has_key?(stock_ticker) == true
+            stock = get_stock(stock_ticker)
+            print_single_stock_info(stock)
+        else
+            puts "Invalid stock ticker, please try again."
+            puts "Use - \'Show list of available stock tickers\' to see list of all possible ticker inputs"
+        end
     elsif user_choice == "Get extended stock price information"
         puts "Enter a stock ticker from the S&P500:"
         stock_ticker = gets.chomp.upcase
-        stock = get_stock(stock_ticker)
-        print_single_stock_price(stock)
-    elsif user_choice == "Get extended stock price information in %s"
+
+        # Error handling
+        if SP500_HASH_TABLE.has_key?(stock_ticker) == true
+            stock = get_stock(stock_ticker)
+            print_single_stock_price(stock)
+        else
+            puts "Invalid stock ticker, please try again."
+            puts "Use - \'Show list of available stock tickers\' to see list of all possible ticker inputs"
+        end
+
+    elsif user_choice == "Get extended stock price information in percentages"
         puts "Enter a stock ticker from the S&P500:"
         stock_ticker = gets.chomp.upcase
-        stock = get_stock(stock_ticker)
-        print_single_stock_price_pct(stock)
+
+         # Error handling
+         if SP500_HASH_TABLE.has_key?(stock_ticker) == true
+            stock = get_stock(stock_ticker)
+            print_single_stock_price_pct(stock)
+        else
+            puts "Invalid stock ticker, please try again."
+            puts "Use - \'Show list of available stock tickers\' to see list of all possible ticker inputs"
+        end
+
     elsif user_choice == "Show list of available stock tickers"
         puts "This is a list of all of the available tickers to check onthe S&P 500:"
         print_list_of_stock_tickers()
+    elsif user_choice == "Exit Program"
+        stop_program_running = true
     end
 
-    # replace these two lines with a TTY-Prompt
-    keep_using = prompt.yes?('Keep using S&P 500 Stock Tracker?')
-    # puts keep_using
-
-    if keep_using == false
+    # Exiting program conditions, exits straight away if user selected Exit Program previously.
+    # Otherwise it asks the user if they'd like to continue using it
+    if stop_program_running == true
         make_stock_price_check = false
+    else
+        keep_using = prompt.yes?('Keep using S&P 500 Stock Tracker?')
+        if keep_using == false
+            make_stock_price_check = false
+        end
     end
 
 end
