@@ -8,10 +8,11 @@
 # index will throw an error using the 'stock_quote' gem
 
 require 'stock_quote'
-require './sp500_hash_table.rb'
-require './iex_API_Key.rb'
 require "test/unit/assertions"
 include Test::Unit::Assertions
+
+require_relative 'sp500_hash_table.rb'
+require_relative 'iex_API_Key.rb'
 
 StockQuote::Stock.new(api_key: API_KEY)
 
