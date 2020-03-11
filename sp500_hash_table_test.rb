@@ -19,7 +19,7 @@ StockQuote::Stock.new(api_key: API_KEY)
 
 list_of_keys = SP500_HASH_TABLE.keys()
     
-for i in 0..list_of_keys.length-1t
+for i in 0..list_of_keys.length-1
     puts "Current stock ticker is: #{list_of_keys[i]}"
     # API will throw an error message if incorrec
     stock = get_stock(list_of_keys[i])

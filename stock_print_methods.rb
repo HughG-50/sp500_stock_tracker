@@ -93,7 +93,7 @@ def print_single_stock_price(stock)
 end
 
 # User story: Martin wanted to be able to see a list of all S&P500 tickers
-def print_list_of_stock_tickers
+def print_list_of_stock_tickers()
     list_of_keys = SP500_HASH_TABLE.keys()
     
     for i in 0..list_of_keys.length-1

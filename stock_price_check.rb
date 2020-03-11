@@ -4,8 +4,11 @@
 
 require 'stock_quote'
 require 'colorize'
-require 'terminal-table' #if required in 'stock_print_methods.rb' is it needed here?
-require_relative 'sp500_hash_table.rb' #needed if in 'stock_print_methods.rb' file?
+require 'terminal-table' 
+require 'tty-prompt'
+# require 'cli/ui'
+
+require_relative 'sp500_hash_table.rb' 
 require_relative 'iex_API_Key.rb'
 require_relative 'stock_getter_methods.rb'
 require_relative 'stock_print_methods.rb'
@@ -14,24 +17,45 @@ require_relative 'stock_print_methods.rb'
 # Initialising the Stock class from 'stock_quote' - allows us to use the IEX API
 StockQuote::Stock.new(api_key: API_KEY)
 
+# Initialise 'TTY-Prompt'
+prompt = TTY::Prompt.new
+
+# Initialising the flow control loop for user interaction to true
 make_stock_price_check = true
+user_options = ["Get stock information", "Get extended stock price information", 
+                "Get extended stock price information in %s", "Show list of available stock tickers"]
 
 puts "Welcome to the S&P 500 Stock Tracker"
-puts "You can check the prices of stocks that are in the S&P 500 by entering a stock ticker"
 
 while make_stock_price_check == true
-    # puts "This is a list of all the S&P 500 stock tickers"
-    # print_list_of_stock_tickers()
-    puts "Enter a stock ticker from the S&P500:"
-    stock_ticker = gets.chomp.upcase
-    stock = get_stock(stock_ticker)
-    # print_single_stock_info(stock)
-    # print_single_stock_price_pct(stock)
-    print_single_stock_price(stock)
+    user_choice = prompt.select("Please choose which function you'd like to use:", user_options)
+    # puts user_choice
 
-    puts "Would you like to check another stock? (y/n):"
-    another_stock_check = gets.chomp
-    if another_stock_check != "y"
+    if user_choice == "Get stock information"
+        puts "Enter a stock ticker from the S&P500:"
+        stock_ticker = gets.chomp.upcase
+        stock = get_stock(stock_ticker)
+        print_single_stock_info(stock)
+    elsif user_choice == "Get extended stock price information"
+        puts "Enter a stock ticker from the S&P500:"
+        stock_ticker = gets.chomp.upcase
+        stock = get_stock(stock_ticker)
+        print_single_stock_price(stock)
+    elsif user_choice == "Get extended stock price information in %s"
+        puts "Enter a stock ticker from the S&P500:"
+        stock_ticker = gets.chomp.upcase
+        stock = get_stock(stock_ticker)
+        print_single_stock_price_pct(stock)
+    elsif user_choice == "Show list of available stock tickers"
+        puts "This is a list of all of the available tickers to check onthe S&P 500:"
+        print_list_of_stock_tickers()
+    end
+
+    # replace these two lines with a TTY-Prompt
+    puts "Keep using S&P 500 Stock Tracker? (y/n):"
+    keep_using = gets.chomp
+    if keep_using != "y"
         make_stock_price_check = false
     end
+
 end
