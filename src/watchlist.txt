@@ -1,0 +1,5 @@
+AAPL
+MMM
+AMD
+BA
+AMZN

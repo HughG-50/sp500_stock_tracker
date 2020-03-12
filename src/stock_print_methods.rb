@@ -3,8 +3,6 @@ require_relative 'sp500_hash_table.rb'
 
 # Displays stock ticker, company name, sector, 
 def print_single_stock_info(stock)
-    # *************
-    # NEED TO TEST IF THIS IS VALID OR WHETHER STOCK_TICKER SHOULD BE PASSED IN AS AN ARGUMENT TO METHOD AS WELL
     stock_ticker = get_stock_symbol(stock)
     rows = []
     rows.push([stock_ticker, get_company_name(stock_ticker), get_stock_sector(stock_ticker), "$" + get_stock_price(stock).to_s,
