@@ -89,7 +89,7 @@ If the user has entered an invalid ticker, the user will be notified of this and
 
 ## Control Flow
 
-**#ADD Diagram**
+![Logic Flow Chart](/docs/stock_tracker_flow_diagram.png)
 
 ## Implementation plan
 
@@ -132,7 +132,7 @@ The steps to build the application were conducted in the following order of prio
     - Watchlists - build watchlist, show watchlist, display watchlist information
     - Portfolio tracking - build portfolio, show portfolio, display portfolio information
 
-**#ADD IMAGE**
+![Trello board ticket management](/docs/trello_project_planning.png)
 
 ## Help and Installation
 
