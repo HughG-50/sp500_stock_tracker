@@ -6,7 +6,6 @@ require 'stock_quote'
 require 'colorize'
 require 'terminal-table' 
 require 'tty-prompt'
-# require 'cli/ui'
 
 require_relative 'sp500_hash_table.rb' 
 require_relative 'iex_API_Key.rb'
