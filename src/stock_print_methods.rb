@@ -7,7 +7,7 @@ def print_single_stock_info(stock)
     # NEED TO TEST IF THIS IS VALID OR WHETHER STOCK_TICKER SHOULD BE PASSED IN AS AN ARGUMENT TO METHOD AS WELL
     stock_ticker = get_stock_symbol(stock)
     rows = []
-    rows.push([stock_ticker, get_company_name(stock_ticker), get_stock_sector(stock_ticker), get_stock_price(stock),
+    rows.push([stock_ticker, get_company_name(stock_ticker), get_stock_sector(stock_ticker), "$" + get_stock_price(stock),
             get_pe_ratio(stock)])
     table = Terminal::Table.new :rows => rows
     table = Terminal::Table.new :headings => ['Ticker','Company','Sector', 'Price', 'PE Ratio'], :rows => rows
