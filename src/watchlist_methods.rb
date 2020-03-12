@@ -13,7 +13,10 @@ def set_watchlist()
     while true
         input = gets.chomp.upcase()
         break if input.empty?
-        watch_list_arr.push(input)
+        # Error handling - only allows valid stock tickers to be entered
+        if SP500_HASH_TABLE.has_key?(input)
+            watch_list_arr.push(input)
+        end
     end
 
     watch_list_string = watch_list_arr.join("\n")
@@ -37,7 +40,7 @@ end
 
 # Prints contents of watchlist file
 def show_watchlist()
-    puts get_watchlist
+    puts get_watchlist()
 end
 
 # Get watchlist stocks
@@ -82,9 +85,3 @@ def print_watchlist_stock_prices(stocks)
     make_table("Watchlist", ['Stock', 'Price','Price Change from Prev Day','Price Change YTD','Change from 52 Week High','Change From 52 Week Low'], table_rows)
 end
 
-set_watchlist()
-watchlist = get_watchlist()
-stocks = get_watchlist_stocks(watchlist)
-print_watchlist_info(stocks)
-print_watchlist_stock_prices(stocks)
-print_watchlist_stock_prices_pct(stocks)
