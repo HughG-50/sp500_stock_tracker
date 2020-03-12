@@ -59,19 +59,19 @@ Prints entire list of stock tickers that are able to be checked.
 
 ### Build watchlist
 
-#TO DO
+**#TO DO**
 
 Allows user to create and save a list of tickers that a user wants to keep track of.
 
 ### Show watchlist
 
-#TO DO
+**#TO DO**
 
 Prints the list of tickers that the user has saved.
 
 ### Display watchlist stock price information
 
-#TO DO
+**#TO DO**
 
 Outputs the extended stock price information but in a table for all of the selected tickers in the watchlist.
 
@@ -89,11 +89,11 @@ If the user has entered an invalid ticker, the user will be notified of this and
 
 ## Control Flow
 
-#ADD Diagram
+**#ADD Diagram**
 
 ## Implementation plan
 
-#TO DO
+The steps to build the application were conducted in the following order of priority to iterate effectively and ensure a working product.
 
 1. Create hash table of S&P 500 company names and sector mapped to their stock ticker as the keys.
 
@@ -111,7 +111,28 @@ If the user has entered an invalid ticker, the user will be notified of this and
 
 3. Create print methods for outputting the data into useful formats
    
+   Checklist:
+   - Setup terminal-table output to present outputs in more readable format
+   - Create print method for stock overview feature
+   - Create print method for extended stock price information
+   - Create print method for extended stock price information in percentages
+   - Create print method for the list of stock tickers
+   - Add logic such that the output prices are colorized green or red appropriately based on their movement
 
+4. Create user interaction control flow and error handling
+
+    Checklist:
+    - Setup while control loop to control exiting or continuation of using the application
+    - Add prompts for the user to select which function they want to use - and appropriate control flow based on their decision
+    - add error handling when invalid inputs are made - checks against hash table
+
+5. Continue to add features once MVP is completed
+
+    Checklist:
+    - Watchlists - build watchlist, show watchlist, display watchlist information
+    - Portfolio tracking - build portfolio, show portfolio, display portfolio information
+
+**#ADD IMAGE**
 
 ## Help and Installation
 
