@@ -59,19 +59,13 @@ Prints entire list of stock tickers that are able to be checked.
 
 ### Build watchlist
 
-**#TO DO**
-
-Allows user to create and save a list of tickers that a user wants to keep track of.
+Allows user to create and save a list of tickers that a user wants to keep track of. Saves to a .txt file so it can be used and accessed at a later date.
 
 ### Show watchlist
-
-**#TO DO**
 
 Prints the list of tickers that the user has saved.
 
 ### Display watchlist stock price information
-
-**#TO DO**
 
 Outputs the extended stock price information but in a table for all of the selected tickers in the watchlist.
 
