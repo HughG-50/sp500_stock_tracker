@@ -21,17 +21,14 @@ def set_portfolio()
         break if input.empty?
         # Converts second input from string to integer to be able to error check
         stock_ticker_and_num_of_stock_arr = input.split(" ")
+
         stock_ticker_and_num_of_stock_arr[1] = stock_ticker_and_num_of_stock_arr[1].to_i()
-        # p "Input stock ticker + num stocks arr: #{stock_ticker_and_num_of_stock_arr}"
-        
+
         # Error handling - only allows valid stock tickers to be entered
-        if SP500_HASH_TABLE.has_key?(stock_ticker_and_num_of_stock_arr[0]) && is_positive_int(stock_ticker_and_num_of_stock_arr[1])
+        if SP500_HASH_TABLE.has_key?(stock_ticker_and_num_of_stock_arr[0]) && is_positive_int(stock_ticker_and_num_of_stock_arr[1]) && stock_ticker_and_num_of_stock_arr.length == 2
             portfolio_arr.push(stock_ticker_and_num_of_stock_arr)
         end
     end
-
-    # p "portfolio_arr: #{portfolio_arr}"
-    # portfolio_string = portfolio_arr.join("\n")
 
     # converts back to original input as a single string for each stock and number - e.g. 'AAPL 2' is a single string
     for i in 0..portfolio_arr.length-1
@@ -39,9 +36,7 @@ def set_portfolio()
         portfolio_arr[i] = stock_tick_and_num_of_stock_string
     end
 
-    # p "portfolio_arr: #{portfolio_arr}"
     portfolio_string = portfolio_arr.join("\n")
-    # p "portfolio string: #{portfolio_string}"
 
     #if portfolio.txt does not exist it will create it
     #WARNING - this will overwrite any existing portfolio data
@@ -51,22 +46,30 @@ def set_portfolio()
 
 end
 
-# NEEDS UPDATING SO WE GET THE NUMBERS AND SUCH IN CORRECT FORMAT IN A USABLE ARRAY
 # Returns the portfolio that is stored in the portfolio.txt file
 def get_portfolio()
-    text_array = []
+    portfolio_arr = []
+    stock_item_arr = []
     File.open("./portfolio.txt", "r") do |file|
-        text_array = file.read.split("\n")
+        portfolio_arr = file.read.split("\n")
     end
 
-    return text_array
+    for i in 0..portfolio_arr.length-1
+        stock_item_arr = portfolio_arr[i].split(" ")
+        stock_item_arr[1].to_i()
+        portfolio_arr[i] = stock_item_arr
+    end
+
+    return portfolio_arr
 end
-
-
 
 # Prints contents of portfolio file
 def show_portfolio()
-    puts get_portfolio()
+    portfolio_array = get_portfolio()
+    
+    for i in 0..portfolio_array.length-1
+        puts "#{portfolio_array[i][0]} #{portfolio_array[i][1]}"
+    end
 end
 
 set_portfolio()
