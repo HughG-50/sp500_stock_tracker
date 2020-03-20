@@ -1,0 +1,4 @@
+AAPL 2
+FB 10
+AMZN 10
+MMM 3
