@@ -3,8 +3,14 @@
 require 'terminal-table'
 require_relative 'sp500_hash_table.rb'
 
+# Error checking helper method - checks if number is positive integer
 def is_positive_int(number)
     return number.is_a?(Integer) && number > 0
+end
+
+# Error checking helper method - checks if string only contains digits
+def string_is_digits?(string)
+    return string.scan(/\D/).empty?
 end
 
 # Method for reading input from terminal and saving to file
@@ -13,8 +19,12 @@ def set_portfolio()
     portfolio_arr = []
     stock_ticker_and_num_of_stock_arr = []
 
-    puts "Enter all stock tickers that you wish to have in your portfolio."
-    puts "Each new stock ticker should be on a new line - Enter blank when done:"
+    puts "Enter stock ticker + amount held"
+    puts "Each new stock ticker + amount should be on a new line, with stock ticker and amount separated with a space"
+    puts "e.g. 10 shares of Apple Inc. :"
+    puts "AAPL 10"
+    puts "Enter blank input when done"
+
     # Reads in user input from command line
     while true
         input = gets.chomp.upcase()
@@ -22,11 +32,13 @@ def set_portfolio()
         # Converts second input from string to integer to be able to error check
         stock_ticker_and_num_of_stock_arr = input.split(" ")
 
-        stock_ticker_and_num_of_stock_arr[1] = stock_ticker_and_num_of_stock_arr[1].to_i()
-
-        # Error handling - only allows valid stock tickers to be entered
-        if SP500_HASH_TABLE.has_key?(stock_ticker_and_num_of_stock_arr[0]) && is_positive_int(stock_ticker_and_num_of_stock_arr[1]) && stock_ticker_and_num_of_stock_arr.length == 2
-            portfolio_arr.push(stock_ticker_and_num_of_stock_arr)
+        # Error handling - checks if only 2 inputs made and that second value is only a number input
+        if stock_ticker_and_num_of_stock_arr.length == 2 && string_is_digits?(stock_ticker_and_num_of_stock_arr[1])
+            stock_ticker_and_num_of_stock_arr[1] = stock_ticker_and_num_of_stock_arr[1].to_i()
+            # Error handling - only allows valid stock tickers to be entered and check if stocks is integer > 0
+            if SP500_HASH_TABLE.has_key?(stock_ticker_and_num_of_stock_arr[0]) && is_positive_int(stock_ticker_and_num_of_stock_arr[1])
+                portfolio_arr.push(stock_ticker_and_num_of_stock_arr)
+            end
         end
     end
 
@@ -72,6 +84,6 @@ def show_portfolio()
     end
 end
 
-set_portfolio()
-p get_portfolio()
-show_portfolio()
+# set_portfolio()
+# # p get_portfolio()
+# show_portfolio()
