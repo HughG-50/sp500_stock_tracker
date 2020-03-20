@@ -1,5 +1,8 @@
-    # SP500 Data in hash table form
+    # SP500 Data hash table 
 SP500_HASH_TABLE = {
+    # ADD ADDITIONAL STOCKS YOU'D LIKE TO USE TO LIST BELOW
+    
+    'TSLA'=>    ['Tesla', 'Industrials'],
     'MMM' =>	['3M Company', 'Industrials'],
     'AOS' =>	['A.O. Smith Corp',	'Industrials'],
     'ABT' =>	['Abbott Laboratories', 'Health Care'],
