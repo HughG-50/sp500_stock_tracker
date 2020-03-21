@@ -15,6 +15,7 @@ require_relative 'iex_API_Key.rb'
 require_relative 'stock_getter_methods.rb'
 require_relative 'stock_print_methods.rb'
 require 'stock_quote'
+StockQuote::Stock.new(api_key: API_KEY)
 # #########################
 
 # Error checking helper method - checks if number is positive integer
@@ -118,6 +119,27 @@ def get_portfolio_stocks(portfolio_stock_list)
     stocks = StockQuote::Stock.quote(portfolio_stock_list)
 end
 
+def get_total_portfolio_value(stocks)
+    total_value = 0
+
+    for i in 0..stocks.length-1
+        stock_ticker = get_stock_symbol(stocks[i])
+        price = get_stock_price(stocks[i])
+        number_of_stock_owned = get_number_of_stock_owned(stock_ticker)
+        stock_holding_value = (number_of_stock_owned*price).round(2)
+        total_value += stock_holding_value
+    end
+
+    return total_value.round(2)
+end
+
+def print_portfolio_total_value(stocks)
+    table_rows = []
+    total_portfolio_value = get_total_portfolio_value(stocks)
+    table_rows.push(["$" + total_portfolio_value.to_s + " USD"])
+    make_simple_table(['Total Portfolio Value'], table_rows)
+end
+
 # Displays stock ticker, company name, sector, price, PE ratio
 def print_portfolio_info(stocks)
     table_rows = []
@@ -128,13 +150,39 @@ def print_portfolio_info(stocks)
         make_table_rows_portfolio_info(table_rows, stocks[i], number_of_stock_owned)
     end
 
-    make_table("Portfolio", ['Ticker','Company','Sector','Price','PE Ratio','Number of stock','Value'], table_rows)
+    make_table("Portfolio", ['Ticker','Company','Sector','Price','PE Ratio','Number of Stock','Holdings Value'], table_rows)
 end
 
+def print_portfolio_stock_prices(stocks)
+    table_rows = []
+    
+    for i in 0..stocks.length-1
+        set_rows_portfolio_price(table_rows, stocks[i])
+    end
+
+    make_table("Portfolio", ['Stock','Price','Price Change from Prev Day','Price Change YTD','Change from 52 Week High','Change From 52 Week Low','Number of Stock','Holdings Value'], table_rows)
+end
+
+def print_portfolio_stock_prices_pct(stocks)
+    table_rows = []
+    
+    for i in 0..stocks.length-1
+        set_rows_portfolio_price_pct(table_rows, stocks[i])
+    end
+
+    make_table("Portfolio", ['Stock', 'Price','% Change Prev Day','% Change YTD','% From 52 Week High','% From 52 Week Low','Number of Stock','Holdings Value'], table_rows)
+end
+
+
+# TESTING - TO DELETE LATER
+# #########################
 # set_portfolio()
-# p get_portfolio_hash()
-# show_portfolio()
+p get_portfolio_hash()
+show_portfolio()
 stock_list = get_portfolio_stock_list()
-# p stock_list
+p stock_list
 stocks = get_portfolio_stocks(stock_list)
 print_portfolio_info(stocks)
+print_portfolio_total_value(stocks)
+print_portfolio_stock_prices(stocks)
+# #########################
