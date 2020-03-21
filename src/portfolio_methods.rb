@@ -3,6 +3,20 @@
 require 'terminal-table'
 require_relative 'sp500_hash_table.rb'
 
+# DELETE THIS AFTER TESTING
+# #########################
+require_relative 'stock_print_methods.rb'
+require 'colorize'
+require 'terminal-table' 
+require 'tty-prompt'
+
+require_relative 'sp500_hash_table.rb' 
+require_relative 'iex_API_Key.rb'
+require_relative 'stock_getter_methods.rb'
+require_relative 'stock_print_methods.rb'
+require 'stock_quote'
+# #########################
+
 # Error checking helper method - checks if number is positive integer
 def is_positive_int(number)
     return number.is_a?(Integer) && number > 0
@@ -58,32 +72,69 @@ def set_portfolio()
 
 end
 
-# Returns the portfolio that is stored in the portfolio.txt file
-def get_portfolio()
+# Returns the portfolio that is stored in the portfolio.txt file as a hash table
+def get_portfolio_hash()
     portfolio_arr = []
-    stock_item_arr = []
+    portfolio_hash_table = {}
     File.open("./portfolio.txt", "r") do |file|
         portfolio_arr = file.read.split("\n")
     end
 
-    for i in 0..portfolio_arr.length-1
-        stock_item_arr = portfolio_arr[i].split(" ")
-        stock_item_arr[1].to_i()
-        portfolio_arr[i] = stock_item_arr
+    portfolio_arr.each do |array_item|
+        # stock ticker is the key and the number of stocks is the value
+        key,value = array_item.split(" ") # splitting the array items into key and value
+        portfolio_hash_table[key] = value.to_i # storing key => value pairs in the portfolio_hash_table
     end
+    
+    return portfolio_hash_table
+end
 
-    return portfolio_arr
+# Returns array of the portfolio stock tickers - needed for getting stock objects from API
+def get_portfolio_stock_list()
+    portfolio_stock_list = []
+    portfolio_hash = get_portfolio_hash()
+    # Need to make array of all the portfolio hash keys
+    portfolio_stock_list = portfolio_hash.keys
+    return portfolio_stock_list
+end
+
+# Get number of stock owned for stock in portfolio
+def get_number_of_stock_owned(stock_ticker)
+    portfolio_hash_table = get_portfolio_hash()
+    return portfolio_hash_table[stock_ticker]
 end
 
 # Prints contents of portfolio file
 def show_portfolio()
-    portfolio_array = get_portfolio()
-    
-    for i in 0..portfolio_array.length-1
-        puts "#{portfolio_array[i][0]} #{portfolio_array[i][1]}"
+    portfolio_hash_table = get_portfolio_hash()
+
+    portfolio_hash_table.each do |key, value|
+        puts "#{key} #{value}"
     end
 end
 
+# Returns array of stock objects
+def get_portfolio_stocks(portfolio_stock_list)
+    stocks = StockQuote::Stock.quote(portfolio_stock_list)
+end
+
+# Displays stock ticker, company name, sector, price, PE ratio
+def print_portfolio_info(stocks)
+    table_rows = []
+
+    for i in 0..stocks.length-1
+        stock_ticker = get_stock_symbol(stocks[i])
+        number_of_stock_owned = get_number_of_stock_owned(stock_ticker)
+        make_table_rows_portfolio_info(table_rows, stocks[i], number_of_stock_owned)
+    end
+
+    make_table("Portfolio", ['Ticker','Company','Sector','Price','PE Ratio','Number of stock','Value'], table_rows)
+end
+
 # set_portfolio()
-# # p get_portfolio()
+# p get_portfolio_hash()
 # show_portfolio()
+stock_list = get_portfolio_stock_list()
+# p stock_list
+stocks = get_portfolio_stocks(stock_list)
+print_portfolio_info(stocks)

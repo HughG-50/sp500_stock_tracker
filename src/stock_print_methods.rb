@@ -37,10 +37,19 @@ def print_list_of_stock_tickers()
     end
 end
 
+# Function for populating stock overview information for stocks + watchlist overview
 def make_table_rows_stock_info(table_rows, stock)
     stock_ticker = get_stock_symbol(stock)
     table_rows.push([stock_ticker, get_company_name(stock_ticker), get_stock_sector(stock_ticker), "$" + get_stock_price(stock).to_s,
                     get_pe_ratio(stock)])
+end
+
+def make_table_rows_portfolio_info(table_rows, stock, number_of_stock_owned)
+    stock_ticker = get_stock_symbol(stock)
+    price = get_stock_price(stock)
+    value = number_of_stock_owned*price
+    table_rows.push([stock_ticker, get_company_name(stock_ticker), get_stock_sector(stock_ticker), "$" + price.to_s,
+                    get_pe_ratio(stock), number_of_stock_owned, "$" + value.to_s])
 end
 
 # pct_y_day_color and pct_ytd_color should be set to :green or :red
