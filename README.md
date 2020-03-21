@@ -1,5 +1,7 @@
 # S&P 500 Stock Tracker
 
+https://github.com/HughG-50
+
 ## Purpose and Scope
 
 The S&P500 Stock Tracker is a terminal application designed to provide an easy way for users to get up-to-date, basic price information of all the major stocks trading in the US. The core functionality is built on top of the Gem 'stock_quote' which allows US stock data to be pulled from the [IEX Cloud](https://iexcloud.io/) API.
@@ -59,19 +61,13 @@ Prints entire list of stock tickers that are able to be checked.
 
 ### Build watchlist
 
-**#TO DO**
-
-Allows user to create and save a list of tickers that a user wants to keep track of.
+Allows user to create and save a list of tickers that a user wants to keep track of. Saves to a .txt file so it can be used and accessed at a later date.
 
 ### Show watchlist
-
-**#TO DO**
 
 Prints the list of tickers that the user has saved.
 
 ### Display watchlist stock price information
-
-**#TO DO**
 
 Outputs the extended stock price information but in a table for all of the selected tickers in the watchlist.
 
@@ -86,53 +82,6 @@ If the feature selected requires the user to input a stock ticker, they then mus
 Once the function output has completed, the user will be prompted whether they wish to continue, if they select 'yes' then they will be returned to the original function selection menu otherwise if 'no', the program will exit.
 
 If the user has entered an invalid ticker, the user will be notified of this and be given the suggestion to check the list of available tickers. They will then be prompted whether they wish to exit or not, if not they will be returned to the original prompt function seletion menu.
-
-## Control Flow
-
-![Logic Flow Chart](/docs/stock_tracker_flow_diagram.png)
-
-## Implementation plan
-
-The steps to build the application were conducted in the following order of priority to iterate effectively and ensure a working product.
-
-1. Create hash table of S&P 500 company names and sector mapped to their stock ticker as the keys.
-
-    Checklist:
-   - Find data source
-   - Format hash table
-   - Create getter methods for retrieving values from hash table fields
-  
-2. Integrate 'stock_quote' gem and create getter methods for Stock object
-
-    Checklist:
-    - Create getter methods for price change information - e.g. latest price, price change YTD, PE Ratio etc
-    - Validate hash table of tickers are valid inputs to API - see *'sp500_hash_table_test'*
-    - Create helper methods for converting percentage change values from API into absolute price terms
-
-3. Create print methods for outputting the data into useful formats
-   
-   Checklist:
-   - Setup terminal-table output to present outputs in more readable format
-   - Create print method for stock overview feature
-   - Create print method for extended stock price information
-   - Create print method for extended stock price information in percentages
-   - Create print method for the list of stock tickers
-   - Add logic such that the output prices are colorized green or red appropriately based on their movement
-
-4. Create user interaction control flow and error handling
-
-    Checklist:
-    - Setup while control loop to control exiting or continuation of using the application
-    - Add prompts for the user to select which function they want to use - and appropriate control flow based on their decision
-    - add error handling when invalid inputs are made - checks against hash table
-
-5. Continue to add features once MVP is completed
-
-    Checklist:
-    - Watchlists - build watchlist, show watchlist, display watchlist information
-    - Portfolio tracking - build portfolio, show portfolio, display portfolio information
-
-![Trello board ticket management](/docs/trello_project_planning.png)
 
 ## Help and Installation
 
@@ -171,3 +120,7 @@ Then run the program from the terminal with the command:
 ```
 ruby stock_price_check.rb
 ```
+
+**Note:** if the stock you wish to check is not included in the application then you must add it to the *sp500_hash_table.rb* file. The 'stock_quote' documentation does
+not make it clear as to which stocks exactly are included for use with the API - so if adding additional tickers to the table, sp500_hash_table_test.rb should be run 
+before using the app to check for potential errors.

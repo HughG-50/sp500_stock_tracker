@@ -11,6 +11,7 @@ require_relative 'sp500_hash_table.rb'
 require_relative 'iex_API_Key.rb'
 require_relative 'stock_getter_methods.rb'
 require_relative 'stock_print_methods.rb'
+require_relative 'watchlist_methods.rb'
 
 # API_KEY is hidden - sign up to iexcloud.io with account to get one
 # Initialising the Stock class from 'stock_quote' - allows us to use the IEX API
@@ -22,8 +23,10 @@ prompt = TTY::Prompt.new
 # Initialising the flow control loop for user interaction to true
 make_stock_price_check = true
 stop_program_running = false
-user_options = ["Get stock overview", "Get extended stock price information", 
-                "Get extended stock price information in percentages", "Show list of available stock tickers", "Exit Program"]
+user_options = ["Get stock overview", "Get stock price information", 
+                "Get stock price information in percentages", "Show list of available stock tickers", 
+                "Build watchlist", "Show watchlist", "Get watchlist stock overview",
+                "Get watchlist price information", "Get watchlist price information in percentages", "Exit Program"]
 
 puts "Welcome to the S&P 500 Stock Tracker"
 
@@ -42,7 +45,7 @@ while make_stock_price_check == true
             puts "Invalid stock ticker, please try again."
             puts "Use - \'Show list of available stock tickers\' to see list of all possible ticker inputs"
         end
-    elsif user_choice == "Get extended stock price information"
+    elsif user_choice == "Get stock price information"
         puts "Enter a stock ticker from the S&P500:"
         stock_ticker = gets.chomp.upcase
 
@@ -55,7 +58,7 @@ while make_stock_price_check == true
             puts "Use - \'Show list of available stock tickers\' to see list of all possible ticker inputs"
         end
 
-    elsif user_choice == "Get extended stock price information in percentages"
+    elsif user_choice == "Get stock price information in percentages"
         puts "Enter a stock ticker from the S&P500:"
         stock_ticker = gets.chomp.upcase
 
@@ -64,13 +67,30 @@ while make_stock_price_check == true
             stock = get_stock(stock_ticker)
             print_single_stock_price_pct(stock)
         else
-            puts "Invalid stock ticker, please try again."
+            puts "#{stock_ticker}  is invalid input, please try again."
             puts "Use - \'Show list of available stock tickers\' to see list of all possible ticker inputs"
         end
 
     elsif user_choice == "Show list of available stock tickers"
         puts "This is a list of all of the available tickers to check onthe S&P 500:"
         print_list_of_stock_tickers()
+    
+    elsif user_choice == "Build watchlist"
+        set_watchlist()
+    elsif user_choice == "Show watchlist"
+        show_watchlist()
+    elsif user_choice == "Get watchlist stock overview"
+        watchlist = get_watchlist()
+        stocks = get_watchlist_stocks(watchlist)
+        print_watchlist_info(stocks)
+    elsif user_choice == "Get watchlist price information"
+        watchlist = get_watchlist()
+        stocks = get_watchlist_stocks(watchlist)
+        print_watchlist_stock_prices(stocks)
+    elsif user_choice == "Get watchlist price information in percentages"
+        watchlist = get_watchlist()
+        stocks = get_watchlist_stocks(watchlist)
+        print_watchlist_stock_prices_pct(stocks)
     elsif user_choice == "Exit Program"
         stop_program_running = true
     end
