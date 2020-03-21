@@ -71,9 +71,7 @@ def make_table_rows_stock_prices(table_rows, stock, price_y_day_color, price_ytd
                 "$".colorize(:green) + get_price_change_52w_l(stock).to_s.colorize(:green)])
 end
 
-
-
-def make_table_rows_portfolio_stock_prices_pct(table_rows, stock, price_y_day_color, price_ytd_color, number_of_stock_owned)
+def make_table_rows_portfolio_stock_prices_pct(table_rows, stock, pct_y_day_color, pct_ytd_color, number_of_stock_owned)
     stock_ticker = get_stock_symbol(stock)
     price = get_stock_price(stock)
     value = (number_of_stock_owned*price).round(2)
@@ -82,9 +80,9 @@ def make_table_rows_portfolio_stock_prices_pct(table_rows, stock, price_y_day_co
                 (get_pct_change_y_day(stock)*100).round(2).to_s.colorize(pct_y_day_color) + "%".colorize(pct_y_day_color),
                 (get_pct_change_ytd(stock)*100).round(2).to_s.colorize(pct_ytd_color) + "%".colorize(pct_ytd_color),
                 (get_pct_change_52w_h(stock)*100).round(2).to_s.colorize(:red)+ "%".colorize(:red), 
-                (get_pct_change_52w_l(stock)*100).round(2).to_s.colorize(:green) + "%".colorize(:green)],
-                number_of_stock_owned, 
-                "$".colorize(price_y_day_color) + value.to_s.colorize(price_y_day_color))
+                (get_pct_change_52w_l(stock)*100).round(2).to_s.colorize(:green) + "%".colorize(:green),
+                number_of_stock_owned, "$" + value.to_s,])            
+                
 end
 
 
@@ -97,12 +95,10 @@ def make_table_rows_portfolio_stock_prices(table_rows, stock, price_y_day_color,
                 "$".colorize(price_y_day_color) + get_price_change_y_day(stock).to_s.colorize(price_y_day_color), 
                 "$".colorize(price_ytd_color) + get_price_change_ytd(stock).to_s.colorize(price_ytd_color),
                 "$".colorize(:red) + get_price_change_52w_h(stock).to_s.colorize(:red), 
-                "$".colorize(:green) + get_price_change_52w_l(stock).to_s.colorize(:green)],
-                number_of_stock_owned, 
-                "$".colorize(price_y_day_color) + value.to_s.colorize(price_y_day_color))
+                "$".colorize(:green) + get_price_change_52w_l(stock).to_s.colorize(:green),
+                number_of_stock_owned, "$" + value.to_s,
+                "$".colorize(price_y_day_color) + (number_of_stock_owned*get_price_change_y_day(stock)).round(2).to_s.colorize(price_y_day_color)])
 end
-
-
 
 def make_table(title, headings, rows)
     table = Terminal::Table.new :title => title, :headings => headings, :rows => rows
@@ -149,10 +145,7 @@ def set_rows_price_pct(table_rows, stock)
     make_table_rows_stock_prices_pct(table_rows, stock, pct_y_day_color, pct_ytd_color)
 end
 
-def set_rows_portfolio_price(table_rows, stock)
-    stock_ticker = get_stock_symbol(stock)
-    number_of_stock_owned = get_number_of_stock_owned(stock_ticker)
-
+def set_rows_portfolio_price(table_rows, stock, number_of_stock_owned)
     if get_price_change_y_day(stock) > 0 && get_price_change_ytd(stock) > 0
         price_y_day_color = :green
         price_ytd_color = :green
@@ -169,9 +162,7 @@ def set_rows_portfolio_price(table_rows, stock)
     make_table_rows_portfolio_stock_prices(table_rows, stock, price_y_day_color, price_ytd_color, number_of_stock_owned)
 end
 
-def set_rows_portfolio_price_pct(table_rows, stock)
-    stock_ticker = get_stock_symbol(stock)
-    number_of_stock_owned = get_number_of_stock_owned(stock_ticker)
+def set_rows_portfolio_price_pct(table_rows, stock, number_of_stock_owned)
     if get_price_change_y_day(stock) > 0 && get_pct_change_ytd(stock) > 0
         pct_y_day_color = :green
         pct_ytd_color = :green
@@ -186,5 +177,5 @@ def set_rows_portfolio_price_pct(table_rows, stock)
         pct_y_day_color = :red
         pct_ytd_color = :red
     end
-    make_table_rows_portfolio_stock_prices_pct(table_rows, stock, price_y_day_color, price_ytd_color, number_of_stock_owned)
+    make_table_rows_portfolio_stock_prices_pct(table_rows, stock, pct_y_day_color, pct_ytd_color, number_of_stock_owned)
 end

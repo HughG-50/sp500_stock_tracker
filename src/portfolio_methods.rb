@@ -3,21 +3,6 @@
 require 'terminal-table'
 require_relative 'sp500_hash_table.rb'
 
-# DELETE THIS AFTER TESTING
-# #########################
-require_relative 'stock_print_methods.rb'
-require 'colorize'
-require 'terminal-table' 
-require 'tty-prompt'
-
-require_relative 'sp500_hash_table.rb' 
-require_relative 'iex_API_Key.rb'
-require_relative 'stock_getter_methods.rb'
-require_relative 'stock_print_methods.rb'
-require 'stock_quote'
-StockQuote::Stock.new(api_key: API_KEY)
-# #########################
-
 # Error checking helper method - checks if number is positive integer
 def is_positive_int(number)
     return number.is_a?(Integer) && number > 0
@@ -157,32 +142,22 @@ def print_portfolio_stock_prices(stocks)
     table_rows = []
     
     for i in 0..stocks.length-1
-        set_rows_portfolio_price(table_rows, stocks[i])
+        stock_ticker = get_stock_symbol(stocks[i])
+        number_of_stock_owned = get_number_of_stock_owned(stock_ticker)
+        set_rows_portfolio_price(table_rows, stocks[i], number_of_stock_owned)
     end
 
-    make_table("Portfolio", ['Stock','Price','Price Change from Prev Day','Price Change YTD','Change from 52 Week High','Change From 52 Week Low','Number of Stock','Holdings Value'], table_rows)
+    make_table("Portfolio", ['Stock','Price','Price Change from Prev Day','Price Change YTD','Change from 52 Week High','Change From 52 Week Low','Number of Stock','Holdings Value', 'Holdings Value Change'], table_rows)
 end
 
 def print_portfolio_stock_prices_pct(stocks)
     table_rows = []
     
     for i in 0..stocks.length-1
-        set_rows_portfolio_price_pct(table_rows, stocks[i])
+        stock_ticker = get_stock_symbol(stocks[i])
+        number_of_stock_owned = get_number_of_stock_owned(stock_ticker)
+        set_rows_portfolio_price_pct(table_rows, stocks[i], number_of_stock_owned)
     end
 
     make_table("Portfolio", ['Stock', 'Price','% Change Prev Day','% Change YTD','% From 52 Week High','% From 52 Week Low','Number of Stock','Holdings Value'], table_rows)
 end
-
-
-# TESTING - TO DELETE LATER
-# #########################
-# set_portfolio()
-p get_portfolio_hash()
-show_portfolio()
-stock_list = get_portfolio_stock_list()
-p stock_list
-stocks = get_portfolio_stocks(stock_list)
-print_portfolio_info(stocks)
-print_portfolio_total_value(stocks)
-print_portfolio_stock_prices(stocks)
-# #########################
