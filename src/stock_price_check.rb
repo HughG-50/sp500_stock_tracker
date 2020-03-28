@@ -23,74 +23,88 @@ prompt = TTY::Prompt.new
 # Initialising the flow control loop for user interaction to true
 make_stock_price_check = true
 stop_program_running = false
-user_options = ["Get stock overview", "Get stock price information", 
-                "Get stock price information in percentages", "Show list of available stock tickers", 
-                "Build watchlist", "Show watchlist", "Get watchlist stock overview",
-                "Get watchlist price information", "Get watchlist price information in percentages", "Exit Program"]
+user_options = ["Individual stock information",  "Show list of available stock tickers", "Watchlist functions",
+                "Exit Program"]
 
 puts "Welcome to the S&P 500 Stock Tracker"
 
 while make_stock_price_check == true
     user_choice = prompt.select("Please choose which function you'd like to use:", user_options)
 
-    if user_choice == "Get stock overview"
-        puts "Enter a stock ticker from the S&P500:"
-        stock_ticker = gets.chomp.upcase
+    if user_choice == "Individual stock information"
+        
+        user_options_indv_stock = ["Get stock overview", "Get stock price information", "Get stock price information in percentages"]
+        user_choice_indv_stock = prompt.select("Select option: ", user_options_indv_stock)
+        
+        if user_choice_indv_stock == "Get stock overview"
+            puts "Enter a stock ticker from the S&P500:"
+            stock_ticker = gets.chomp.upcase
+    
+            # Error handling
+            if SP500_HASH_TABLE.has_key?(stock_ticker) == true
+                stock = get_stock(stock_ticker)
+                print_single_stock_info(stock)
+            else
+                puts "Invalid stock ticker, please try again."
+                puts "Use - \'Show list of available stock tickers\' to see list of all possible ticker inputs"
+            end
+        
+        elsif user_choice_indv_stock == "Get stock price information"
+            puts "Enter a stock ticker from the S&P500:"
+            stock_ticker = gets.chomp.upcase
+    
+            # Error handling
+            if SP500_HASH_TABLE.has_key?(stock_ticker) == true
+                stock = get_stock(stock_ticker)
+                print_single_stock_price(stock)
+            else
+                puts "Invalid stock ticker, please try again."
+                puts "Use - \'Show list of available stock tickers\' to see list of all possible ticker inputs"
+            end
 
-        # Error handling
-        if SP500_HASH_TABLE.has_key?(stock_ticker) == true
-            stock = get_stock(stock_ticker)
-            print_single_stock_info(stock)
-        else
-            puts "Invalid stock ticker, please try again."
-            puts "Use - \'Show list of available stock tickers\' to see list of all possible ticker inputs"
-        end
-    elsif user_choice == "Get stock price information"
-        puts "Enter a stock ticker from the S&P500:"
-        stock_ticker = gets.chomp.upcase
+        elsif user_choice_indv_stock == "Get stock price information in percentages"
+            puts "Enter a stock ticker from the S&P500:"
+            stock_ticker = gets.chomp.upcase
+    
+             # Error handling
+             if SP500_HASH_TABLE.has_key?(stock_ticker) == true
+                stock = get_stock(stock_ticker)
+                print_single_stock_price_pct(stock)
+            else
+                puts "#{stock_ticker}  is invalid input, please try again."
+                puts "Use - \'Show list of available stock tickers\' to see list of all possible ticker inputs"
+            end
 
-        # Error handling
-        if SP500_HASH_TABLE.has_key?(stock_ticker) == true
-            stock = get_stock(stock_ticker)
-            print_single_stock_price(stock)
-        else
-            puts "Invalid stock ticker, please try again."
-            puts "Use - \'Show list of available stock tickers\' to see list of all possible ticker inputs"
-        end
-
-    elsif user_choice == "Get stock price information in percentages"
-        puts "Enter a stock ticker from the S&P500:"
-        stock_ticker = gets.chomp.upcase
-
-         # Error handling
-         if SP500_HASH_TABLE.has_key?(stock_ticker) == true
-            stock = get_stock(stock_ticker)
-            print_single_stock_price_pct(stock)
-        else
-            puts "#{stock_ticker}  is invalid input, please try again."
-            puts "Use - \'Show list of available stock tickers\' to see list of all possible ticker inputs"
         end
 
     elsif user_choice == "Show list of available stock tickers"
         puts "This is a list of all of the available tickers to check onthe S&P 500:"
         print_list_of_stock_tickers()
+
+    elsif user_choice == "Watchlist functions"
     
-    elsif user_choice == "Build watchlist"
-        set_watchlist()
-    elsif user_choice == "Show watchlist"
-        show_watchlist()
-    elsif user_choice == "Get watchlist stock overview"
-        watchlist = get_watchlist()
-        stocks = get_watchlist_stocks(watchlist)
-        print_watchlist_info(stocks)
-    elsif user_choice == "Get watchlist price information"
-        watchlist = get_watchlist()
-        stocks = get_watchlist_stocks(watchlist)
-        print_watchlist_stock_prices(stocks)
-    elsif user_choice == "Get watchlist price information in percentages"
-        watchlist = get_watchlist()
-        stocks = get_watchlist_stocks(watchlist)
-        print_watchlist_stock_prices_pct(stocks)
+        user_options_watchlist = ["Build watchlist", "Show watchlist", "Get watchlist stock overview", 
+                                "Get watchlist price information", "Get watchlist price information in percentages"]
+        user_choice_watchlist = prompt.select("Select option: ", user_options_watchlist)
+
+        if user_choice_watchlist == "Build watchlist"
+            set_watchlist()
+        elsif user_choice_watchlist == "Show watchlist"
+            show_watchlist()
+        elsif user_choice_watchlist == "Get watchlist stock overview"
+            watchlist = get_watchlist()
+            stocks = get_watchlist_stocks(watchlist)
+            print_watchlist_info(stocks)
+        elsif user_choice_watchlist == "Get watchlist price information"
+            watchlist = get_watchlist()
+            stocks = get_watchlist_stocks(watchlist)
+            print_watchlist_stock_prices(stocks)
+        elsif user_choice_watchlist == "Get watchlist price information in percentages"
+            watchlist = get_watchlist()
+            stocks = get_watchlist_stocks(watchlist)
+            print_watchlist_stock_prices_pct(stocks)
+        end
+    
     elsif user_choice == "Exit Program"
         stop_program_running = true
     end
