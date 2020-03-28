@@ -12,6 +12,7 @@ require_relative 'iex_API_Key.rb'
 require_relative 'stock_getter_methods.rb'
 require_relative 'stock_print_methods.rb'
 require_relative 'watchlist_methods.rb'
+require_relative 'portfolio_methods.rb'
 
 # API_KEY is hidden - sign up to iexcloud.io with account to get one
 # Initialising the Stock class from 'stock_quote' - allows us to use the IEX API
@@ -24,7 +25,7 @@ prompt = TTY::Prompt.new
 make_stock_price_check = true
 stop_program_running = false
 user_options = ["Individual stock information",  "Show list of available stock tickers", "Watchlist functions",
-                "Exit Program"]
+                "Portfolio functions", "Exit Program"]
 
 puts "Welcome to the S&P 500 Stock Tracker"
 
@@ -33,7 +34,7 @@ while make_stock_price_check == true
 
     if user_choice == "Individual stock information"
         
-        user_options_indv_stock = ["Get stock overview", "Get stock price information", "Get stock price information in percentages"]
+        user_options_indv_stock = ["Get stock overview", "Get stock price information", "Get stock price information in percentages", "Exit"]
         user_choice_indv_stock = prompt.select("Select option: ", user_options_indv_stock)
         
         if user_choice_indv_stock == "Get stock overview"
@@ -75,6 +76,8 @@ while make_stock_price_check == true
                 puts "Use - \'Show list of available stock tickers\' to see list of all possible ticker inputs"
             end
 
+        elsif user_choice_indv_stock == "Exit"
+            # Do nothing
         end
 
     elsif user_choice == "Show list of available stock tickers"
@@ -84,7 +87,7 @@ while make_stock_price_check == true
     elsif user_choice == "Watchlist functions"
     
         user_options_watchlist = ["Build watchlist", "Show watchlist", "Get watchlist stock overview", 
-                                "Get watchlist price information", "Get watchlist price information in percentages"]
+                                "Get watchlist price information", "Get watchlist price information in percentages", "Exit"]
         user_choice_watchlist = prompt.select("Select option: ", user_options_watchlist)
 
         if user_choice_watchlist == "Build watchlist"
@@ -103,8 +106,38 @@ while make_stock_price_check == true
             watchlist = get_watchlist()
             stocks = get_watchlist_stocks(watchlist)
             print_watchlist_stock_prices_pct(stocks)
+
+        elsif user_choice_watchlist == "Exit"
+            # Do nothing
         end
+
+    elsif user_choice == "Portfolio functions"
+
+        user_options_portfolio = ["Build portfolio", "Show portfolio", "Get portfolio stock overview", 
+            "Get portfolio price information", "Get portfolio price information in percentages", "Exit"]
+        user_choice_portfolio = prompt.select("Select option: ", user_options_portfolio)        
     
+        if user_choice_portfolio == "Build portfolio"
+            set_portfolio()
+        elsif user_choice_portfolio == "Show portfolio"
+            show_portfolio()
+        elsif user_choice_portfolio == "Get portfolio stock overview"
+            portfolio = get_portfolio_stock_list()
+            stocks = get_portfolio_stocks(portfolio)
+            print_portfolio_info(stocks)
+        elsif user_choice_portfolio == "Get portfolio price information"
+            portfolio = get_portfolio_stock_list()
+            stocks = get_portfolio_stocks(portfolio)
+            print_portfolio_stock_prices(stocks)
+        elsif user_choice_portfolio == "Get portfolio price information in percentages"
+            portfolio = get_portfolio_stock_list()
+            stocks = get_portfolio_stocks(portfolio)
+            print_portfolio_stock_prices_pct(stocks)
+        
+        elsif user_choice_portfolio == "Exit"
+            # Do nothing
+        end
+
     elsif user_choice == "Exit Program"
         stop_program_running = true
     end
